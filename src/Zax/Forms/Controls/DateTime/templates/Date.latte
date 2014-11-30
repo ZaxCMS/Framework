@@ -1,0 +1,82 @@
+{layout './@layout.latte'}
+{define dateTimeControl}
+
+{if $selectedValue === NULL}
+	{? $selectedValue = new Nette\Utils\DateTime}
+{/if}
+
+{var $year = $selectedValue->format('Y')}
+{var $month = $selectedValue->format('m')}
+{var $day = $selectedValue->format('j')}
+{var $hour = $selectedValue->format('h')}
+{var $minute = $selectedValue->format('i')}
+{var $prototype = clone $selectedValue}
+
+	{* $selectedValue->format('Y-m-d h:i:s') *}
+
+	<table class="table table-bordered table-text-center table-date-input">
+		<tr>
+			<th colspan="5">
+				<ul class="nav nav-pills size-small nav-justified">
+					<li><a class="ajax" n:href="this, selectedValue => $selectedValue->modifyClone('-1 month')->format('Y-m-d H:i:s')"><span class="glyphicon glyphicon-arrow-left"></span></a></li>
+					<li class="dropdown">
+						<a class="dropdown-toggle cursor-pointer" data-toggle="dropdown">{$month|beautifulMonth|firstUpper}</a>
+						<ul class="dropdown-menu">
+							{for $i=1;$i<=12;$i++}
+								{? $prototype->setDate($year, $i, $day)}
+								<li{if (int)$month === $i} class="active"{/if}><a class="ajax" n:href="this, selectedValue => $prototype->format('Y-m-d H:i:s')">{$i|beautifulMonth|firstUpper}</a></li>
+							{/for}
+						</ul>
+					</li>
+					<li><a class="ajax" n:href="this, selectedValue => $selectedValue->modifyClone('+1 month')->format('Y-m-d H:i:s')"><span class="glyphicon glyphicon-arrow-right"></span></a></li>
+				</ul>
+			</th>
+			<th colspan="5">
+				<ul class="nav nav-pills size-small nav-justified">
+					<li><a class="ajax" n:href="this, selectedValue => $selectedValue->modifyClone('-1 year')->format('Y-m-d H:i:s')"><span class="glyphicon glyphicon-arrow-left"></span></a></li>
+					<li class="dropdown">
+						<a class="dropdown-toggle cursor-pointer" data-toggle="dropdown">{$year}</a>
+						<ul class="dropdown-menu">
+							{for $i=$year-10;$i<=$year+10;$i++}
+								{? $prototype->setDate($i, $month, $day)}
+								<li{if (int)$year === $i} class="active"{/if}><a class="ajax" n:href="this, selectedValue => $prototype->format('Y-m-d H:i:s')">{$i}</a></li>
+							{/for}
+						</ul>
+					</li>
+					<li><a class="ajax" n:href="this, selectedValue => $selectedValue->modifyClone('+1 year')->format('Y-m-d H:i:s')"><span class="glyphicon glyphicon-arrow-right"></span></a></li>
+				</ul>
+
+			</th>
+			<th colspan="4">
+				<a class="btn ajax" n:href="this, selectedValue => (new Nette\Utils\DateTime)->format('Y-m-d H:i:s'), setNull => FALSE">{_}dateTimeInput.button.now{/_}</a>
+			</th>
+		</tr>
+		<tr>
+			{for $i=1;$i<=7;$i++}
+				<th colspan="2">{$i|shortDayOfWeek}</th>
+			{/for}
+		</tr>
+
+		{var $prototype = $selectedValue->modifyClone('first day of this month')}
+		{var $dayOfWeek = $prototype->format('N')}
+		{for $i=1; $i<cal_days_in_month(CAL_GREGORIAN, $month, $year); $i++}
+			{if (int)$dayOfWeek === 1}
+				<tr>
+			{/if}
+			{if $i === 1 && $dayOfWeek > 1}
+				{for $j=1;$j<$dayOfWeek;$j++}<td colspan="2"></td>{/for}
+			{/if}
+			<td colspan="2"{if $prototype == $selectedValue} class="bg-primary"{/if}><a n:href="this, selectedValue => $prototype->format('Y-m-d H:i:s'), setNull => FALSE" class="ajax" data-date-picker="{$htmlId}-day">{$prototype->format('j')}</a></td>
+			{if (int)$dayOfWeek % 7 === 0}
+				</tr>
+			{/if}
+			{? $prototype->modify('+1 day')}
+			{? $dayOfWeek = $prototype->format('N')}
+		{/for}
+		{if $dayOfWeek < 7}
+			{for $i=$dayOfWeek;$i<=7;$i++}<td colspan="2"></td>{/for}
+		{/if}
+
+	</table>
+
+{/define}

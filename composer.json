@@ -1,0 +1,27 @@
+{
+    "name": "zaxcms/fw",
+    "description": "Framework for ZaxCMS",
+    "minimum-stability": "dev",
+    "authors": [
+        {
+            "name": "Zax",
+            "email": "zax.drummer@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "nette/nette": "2.2.6",
+        "doctrine/orm": "v2.4.6",
+        "kdyby/events": "v2.2.0",
+        "kdyby/doctrine": "v2.1.0",
+        "kdyby/translation": "v2.0.3",
+        "zenify/doctrine-behaviors": "v1.2.1",
+        "gedmo/doctrine-extensions": "v2.3.9",
+        "rixxi/gedmo": "1.0.1",
+        "janmarek/webloader": "v2.3.0",
+        "mkoubik/sloth": "master"
+    },
+    "require-dev": {
+        "nette/tester": "v1.2.0"
+    }
+}

@@ -1,0 +1,124 @@
+<div n:snippet>
+	<div class="row">
+		<div class="col-sm-11 if-not-js-hide texyarea-toolbar">
+			<div class="btn-group btn-group-sm">
+				<a class="btn btn-default" title="Tučné" data-texyarea="{$prototype->id}" data-function="bold">
+					<b>B</b>
+				</a>
+				<a class="btn btn-default" title="Kurzíva" data-texyarea="{$prototype->id}" data-function="italic">
+					<em>i</em>
+				</a>
+				<a class="btn btn-default" title="Pcrázdné místo" data-texyarea="{$prototype->id}" data-function="closedDiv" data-params="whitespace">{icon resize-vertical}</a>
+			</div>
+			<div class="btn-group btn-group-sm dropdown">
+				<a class="btn btn-default dropdown-toggle" title="Zarovnat" data-toggle="dropdown">{icon align-left} <span class="caret"></span></a>
+				<ul class="dropdown-menu">
+					<li>
+						<a data-texyarea="{$prototype->id}" data-function="alignLeft">
+							{icon align-left} Doleva
+						</a>
+					</li>
+					<li>
+						<a data-texyarea="{$prototype->id}" data-function="alignCenter">
+							{icon align-center} Na střed
+						</a>
+					</li>
+					<li>
+						<a data-texyarea="{$prototype->id}" data-function="alignRight">
+							{icon align-right} Doprava
+						</a>
+					</li>
+					<li>
+						<a data-texyarea="{$prototype->id}" data-function="alignBlock">
+							{icon align-justify} Do bloku
+						</a>
+					</li>
+				</ul>
+			</div>
+			<div class="btn-group btn-group-sm dropdown">
+				<a class="btn btn-default dropdown-toggle" title="Nadpis" data-toggle="dropdown">H <span class="caret"></span></a>
+				<ul class="dropdown-menu">
+					<li>
+						<a data-texyarea="{$prototype->id}" data-function="h1">
+							<strong>H</strong> Velký
+						</a>
+					</li>
+					<li>
+						<a data-texyarea="{$prototype->id}" data-function="h2">
+							<small>H</small> Střední
+						</a>
+					</li>
+					<li>
+						<a data-texyarea="{$prototype->id}" data-function="h3">
+							<small><small><small>H</small></small></small> Malý
+						</a>
+					</li>
+				</ul>
+			</div>
+			<div class="btn-group btn-group-sm dropdown">
+				<a class="btn btn-default dropdown-toggle" title="Seznamy a citace" data-toggle="dropdown">{icon list} <span class="caret"></span></a>
+				<ul class="dropdown-menu">
+					<li>
+						<a data-texyarea="{$prototype->id}" data-function="ul">
+							{icon list} Odrážkový seznam
+						</a>
+					</li>
+					<li>
+						<a data-texyarea="{$prototype->id}" data-function="ol">
+							<small>123</small> Číslovaný seznam
+						</a>
+					</li>
+					<li>
+						<a data-texyarea="{$prototype->id}" data-function="quote">
+							{icon comment} Citace
+						</a>
+					</li>
+				</ul>
+			</div>
+			<div class="btn-group btn-group-sm">
+				<a class="btn btn-default" title="Sloupcové rozložení" data-toggle="popover" data-url="{link widget!, widget => Columns}" data-widget="{$control->getUniqueId()}-columns">
+					{icon th-list}
+				</a>
+			</div>
+			<div class="btn-group btn-group-sm">
+				<a class="btn btn-default" title="Odkaz" data-toggle="popover" data-url="{link widget!, widget => Link}" data-widget="{$control->getUniqueId()}-link">
+					{icon link}
+				</a>
+				<a class="btn btn-default" title="Obrázek" data-toggle="popover" data-url="{link widget!, widget => Img}" data-widget="{$control->getUniqueId()}-img">
+					{icon picture}
+				</a>
+				<a class="btn btn-default" title="Youtube video" data-toggle="popover" data-url="{link widget!, widget => Youtube}" data-widget="{$control->getUniqueId()}-youtube">
+					{icon youtube}
+				</a>
+			</div>
+
+
+			<div class="btn-group btn-group-sm dropdown" n:if="count($divButtonsClasses) > 0">
+				<a class="btn btn-default dropdown-toggle" title="Ostatní" data-toggle="dropdown">{icon star} <span class="caret"></span></a>
+				<ul class="dropdown-menu">
+					{foreach $divButtonsClasses as $divClass => $name}
+						<li>
+							<a data-texyarea="{$prototype->id}" data-function="div" data-params="{$divClass}">{$name}</a>
+						</li>
+					{/foreach}
+				</ul>
+			</div>
+
+		</div>
+		<div class="col-sm-1 pull-right">
+			<a class="btn" href="http://texy.info/cs/syntax" target="_blank" title="Jak formátovat text - texy.info (otevře se v novém panelu)">
+				{icon question-sign}
+			</a>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-12">
+			{include widget}
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-12">
+		{$prototype}
+	</div>
+</div>
