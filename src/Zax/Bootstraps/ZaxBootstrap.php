@@ -38,7 +38,7 @@ class ZaxBootstrap extends AbstractBootstrap {
 				$files = [0 => []];
 				foreach(Finder::findFiles('*.neon')->from($scanDirs) as $path => $file) {
 					$content = Neon::decode(file_get_contents($path));
-					if(!array_key_exists('autoload', $content)) {
+					if(!is_array($content) || !array_key_exists('autoload', $content)) {
 						continue;
 					}
 					$autoload = Arrays::get($content, ['autoload', 0], FALSE);
