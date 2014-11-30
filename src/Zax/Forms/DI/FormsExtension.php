@@ -12,7 +12,7 @@ class FormsExtension extends CompilerExtension {
 	public function loadConfiguration() {
 		$builder = $this->getContainerBuilder();
 		$builder->addDefinition($this->prefix('formExtension'))
-			->setclass('Zax\Forms\FormExtension');
+			->setClass('Zax\Forms\FormExtension');
 	}
 
 	public function afterCompile(ClassType $class) {
@@ -21,7 +21,7 @@ class FormsExtension extends CompilerExtension {
 		$config = $this->getConfig();
 		$init = $class->methods['initialize'];
 		$init->addBody(
-			'$this->getService(\'Zax\Forms\FormExtension\')->register(?);',
+			'$this->getByType(\'Zax\Forms\FormExtension\')->register(?);',
 			array_key_exists('messages', $config) ? $config['messages'] : []
 		);
 	}
