@@ -1,1 +1,2 @@
 modules:
+    default: ZaxCMS\Modules\WelcomePage\IWelcomePageModuleFactory

@@ -1,0 +1,16 @@
+{layout './@layout.latte'}
+
+{define title}Creating custom modules in ZaxCMS{/define}
+
+{define content}
+	<h1>So, you want to create your own modules, huh?</h1>
+	<h2>Good news!</h2>
+	<p>Creating own modules is as easy as writing own Nette components!</p>
+	<p>There are only two extra things you need to do:</p>
+	<ol>
+		<li>Make your control implement the <tt>ZaxCMS\Modules\IModule</tt> interface</li>
+		<li>Register control's factory in <tt>cms</tt> section in config</li>
+	</ol>
+	<h3>Simple, right?</h3>
+	<p><a n:href="this, view => Default">&larr; Go back to previous page</a></p>
+{/define}
