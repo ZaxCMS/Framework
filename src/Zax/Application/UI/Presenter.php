@@ -22,6 +22,12 @@ abstract class Presenter extends Nette\Application\UI\Presenter {
 	/** @var bool */
 	protected $ajaxEnabled = FALSE;
 
+	protected $translator;
+
+	public function injectTranslator(Nette\Localization\ITranslator $translator = NULL) {
+		$this->translator = $translator;
+	}
+
 	/**
 	 * If AJAX forward, else redirect
 	 *
