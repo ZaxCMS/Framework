@@ -19,7 +19,8 @@
         "gedmo/doctrine-extensions": "v2.3.9",
         "rixxi/gedmo": "1.0.1",
         "janmarek/webloader": "v2.3.0",
-        "mkoubik/sloth": "master"
+        "mkoubik/sloth": "master",
+        "nextras/secured-links": "v1.2.0"
     },
     "require-dev": {
         "nette/tester": "v1.2.0"
