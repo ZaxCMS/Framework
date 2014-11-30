@@ -16,9 +16,16 @@ class FormExtension extends Nette\Object {
 
 	protected $registered = FALSE;
 
-	public function __construct(Nette\Localization\ITranslator $translator, Zax\Html\Icons\IIcons $icons) {
+	public function __construct(Zax\Html\Icons\IIcons $icons, Nette\Localization\ITranslator $translator = NULL) {
 		$this->translator = $translator;
 		$this->icons = $icons;
+	}
+
+	protected function translate($text) {
+		if($this->translator === NULL) {
+			return $text;
+		}
+		return $this->translator->translate($text);
 	}
 
 	protected function makeLabel($label, $icon) {
@@ -52,7 +59,7 @@ class FormExtension extends Nette\Object {
 			$control = new Zax\Forms\Controls\LinkSubmitButton($label);
 			$proto = $control->getControlPrototype();
 			$proto->href($destination);
-			$proto->setHtml($this->makeLabel($this->translator->translate($label), $icon));
+			$proto->setHtml($this->makeLabel($this->translate($label), $icon));
 			return $container[$name] = $control;
 		});
 
@@ -66,7 +73,7 @@ class FormExtension extends Nette\Object {
 				$proto->setData($key, $value);
 			}
 
-			$label = $this->makeLabel($this->translator->translate($label), $icon);
+			$label = $this->makeLabel($this->translate($label), $icon);
 
 			$proto->setHtml($label);
 			return $container[$name] = $control;
@@ -84,7 +91,7 @@ class FormExtension extends Nette\Object {
 			$upload = new Nette\Forms\Controls\UploadControl($label, $multiple);
 			$upload->getControlPrototype()
 				->setData([
-					'buttonText' => $this->translator->translate('common.button.chooseFile' . ($multiple ? 's' : '')),
+					'buttonText' => $this->translate('common.button.chooseFile' . ($multiple ? 's' : '')),
 					'input' => $multiple ? 'false' : 'true',
 					'maxFiles' => $multiple ? Zax\Utils\HttpHelpers::getMaxFileUploads() : 1
 				]);
