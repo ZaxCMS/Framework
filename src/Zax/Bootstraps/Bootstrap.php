@@ -26,8 +26,6 @@ class Bootstrap implements IBootstrap {
 
 	protected $debug = FALSE;
 
-	protected $maintenance = '';
-
 	protected $loaderPaths = [];
 
 	protected $configs = [];
@@ -52,9 +50,9 @@ class Bootstrap implements IBootstrap {
 	 * @param $tempDir
 	 */
 	public function __construct($appDir, $rootDir, $tempDir) {
-		$this->appDir = $appDir;
-		$this->rootDir = $rootDir;
-		$this->tempDir = $tempDir;
+		$this->appDir = (string)$appDir;
+		$this->rootDir = (string)$rootDir;
+		$this->tempDir = (string)$tempDir;
 	}
 
 	/** Debugger by IP
@@ -87,8 +85,7 @@ class Bootstrap implements IBootstrap {
 		return $this;
 	}
 
-	/** Autoload all 'config/*.neon' recursively in application dir
-	 * Note that the configs will be loaded in alphabetical order
+	/** Scan app dir for all neon files containing 'autoload: [TRUE]'
 	 *
 	 * @param bool $autoload
 	 * @return $this
@@ -124,18 +121,6 @@ class Bootstrap implements IBootstrap {
 		$this->debug = $enableTracy;
 		$this->catchExceptions = $catchExceptions;
 		$this->enableLog = $enableLog;
-		return $this;
-	}
-
-	/**
-	 * 'die's this message when web is in debug mode and visitor isn't a debugger
-	 * TODO: better solution
-	 *
-	 * @param $maintenance
-	 * @return $this
-	 */
-	public function setMaintenanceMessage($maintenance) {
-		$this->maintenance = $maintenance;
 		return $this;
 	}
 
@@ -187,8 +172,10 @@ class Bootstrap implements IBootstrap {
 		}
 	}
 
+	/**
+	 * @param Nette\Configurator $configurator
+	 */
 	protected function loadConfigFiles(Nette\Configurator $configurator) {
-		// load neon files from all config folders within the app
 		if($this->autoloadConfig === TRUE || is_array($this->autoloadConfig)) {
 			$scanDirs = $this->autoloadConfig === TRUE ? [$this->appDir] : $this->autoloadConfig;
 			$cacheJournal = new Nette\Caching\Storages\FileJournal($this->tempDir);
@@ -199,6 +186,9 @@ class Bootstrap implements IBootstrap {
 				$files = [0 => []];
 				foreach(Nette\Utils\Finder::findFiles('*.neon')->from($scanDirs) as $path => $file) {
 					$content = Nette\Neon\Neon::decode(file_get_contents($path));
+					if(!array_key_exists('autoload', $content)) {
+						continue;
+					}
 					$autoload = Nette\Utils\Arrays::get($content, ['autoload', 0], FALSE);
 					if($autoload === FALSE) {
 						continue;
@@ -228,6 +218,9 @@ class Bootstrap implements IBootstrap {
 	 */
 	protected function setUpConfigurator() {
 		$configurator = new Nette\Configurator;
+
+		// Enable "autoload" section in config files
+		$configurator->defaultExtensions['autoload'] = 'Zax\DI\CompilerExtensions\EmptyExtension';
 
 		// Fix incorrectly initialized appDir
 		$configurator->addParameters(['appDir' => $this->appDir]);
@@ -272,21 +265,10 @@ class Bootstrap implements IBootstrap {
 	public function setUp() {
 		date_default_timezone_set($this->defaultTimezone);
 
-		if($this->debug && !$this->isDebugger()) {
-			die($this->maintenance);
-		}
-
 		$configurator = $this->setUpConfigurator();
 
 		/** @var Nette\DI\Container $container */
 		$container = $configurator->createContainer();
-
-		// Default messages for custom validators in forms
-		if(isset($container->parameters['zax.formsMessages'])) {
-			foreach($container->parameters['zax.formsMessages'] as $validator => $message) {
-				Nette\Forms\Rules::$defaultMessages[$validator] = $message;
-			}
-		}
 
 		return $container;
 	}
@@ -304,9 +286,9 @@ class Bootstrap implements IBootstrap {
 
 		if($this->errorPresenter !== NULL) {
 			$app->errorPresenter = $this->errorPresenter;
-		} else if($this->errorPresenters !== NULL) {
+		}/* else if($this->errorPresenters !== NULL) { // old hack, might need it again though
 			$app->errorPresenters = $this->errorPresenters;
-		}
+		}*/
 
 		$app->run();
 	}

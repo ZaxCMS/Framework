@@ -36,10 +36,15 @@ class FormExtension extends Nette\Object {
 		return $label;
 	}
 
-	public function register() {
+	public function register(array $messages = []) {
 
 		if($this->registered) {
 			return;
+		}
+
+		// Default error messages for custom validators
+		foreach($messages as $validator => $message) {
+			Nette\Forms\Rules::$defaultMessages[$validator] = $message;
 		}
 
 		// addLinkSubmit
