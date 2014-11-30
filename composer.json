@@ -13,6 +13,7 @@
         "nette/nette": "2.2.6",
         "doctrine/orm": "v2.4.6",
         "kdyby/events": "v2.2.0",
+        "kdyby/console": "v2.3.0",
         "kdyby/doctrine": "v2.1.0",
         "kdyby/translation": "v2.0.3",
         "zenify/doctrine-behaviors": "v1.2.1",
