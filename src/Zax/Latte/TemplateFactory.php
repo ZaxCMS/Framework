@@ -37,8 +37,10 @@ class TemplateFactory extends Nette\Bridges\ApplicationLatte\TemplateFactory {
 
 		if($control instanceof Zax\Application\UI\Control || $control instanceof Zax\Application\UI\Presenter) {
 			$template->setTranslator($translator = $control->getTranslator());
-			$template->currentLocale = $control->getLocale();
-			$template->availableLocales = $control->getAvailableLocales();
+
+			// TODO: interface and uncomment?
+			//$template->currentLocale = $control->getLocale();
+			//$template->availableLocales = $control->getAvailableLocales();
 		}
 
 		if($control instanceof Zax\Application\UI\Control) {
