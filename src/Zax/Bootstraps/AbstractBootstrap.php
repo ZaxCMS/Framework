@@ -1,18 +1,12 @@
 <?php
 
-
 namespace Zax\Bootstraps;
-use Nette,
-	Zax;
 
-/**
- * Class Bootstrap
- *
- * Simple bootstrap implementation
- *
- * @package Zax\Bootstraps
- */
-class Bootstrap implements IBootstrap {
+use Nette\Object;
+use Nette\DI\Container;
+use Nette\Configurator;
+
+abstract class AbstractBootstrap extends Object implements IBootstrap {
 
 	protected $appDir;
 
@@ -30,8 +24,6 @@ class Bootstrap implements IBootstrap {
 
 	protected $configs = [];
 
-	protected $autoloadConfig = FALSE;
-
 	protected $defaultTimezone = 'Europe/Prague';
 
 	protected $isDebugger;
@@ -41,8 +33,6 @@ class Bootstrap implements IBootstrap {
 	protected $enableLog = TRUE;
 
 	protected $catchExceptions = TRUE;
-
-	protected $errorPresenters;
 
 	/**
 	 * @param $appDir
@@ -82,16 +72,6 @@ class Bootstrap implements IBootstrap {
 	 */
 	public function addConfig($config) {
 		$this->configs[] = $config;
-		return $this;
-	}
-
-	/** Scan app dir for all neon files containing 'autoload: [TRUE]'
-	 *
-	 * @param bool $autoload
-	 * @return $this
-	 */
-	public function enableConfigAutoload($autoload = TRUE) {
-		$this->autoloadConfig = $autoload;
 		return $this;
 	}
 
@@ -152,14 +132,6 @@ class Bootstrap implements IBootstrap {
 		return $this;
 	}
 
-	public function setErrorPresenters($presenter, $control) {
-		$this->errorPresenters = [
-			'presenter' => $presenter,
-			'control' => $control
-		];
-		return $this;
-	}
-
 	/** Does IP match any debugger's IP?
 	 *
 	 * @return bool
@@ -172,56 +144,8 @@ class Bootstrap implements IBootstrap {
 		}
 	}
 
-	/**
-	 * @param Nette\Configurator $configurator
-	 */
-	protected function loadConfigFiles(Nette\Configurator $configurator) {
-		if($this->autoloadConfig === TRUE || is_array($this->autoloadConfig)) {
-			$scanDirs = $this->autoloadConfig === TRUE ? [$this->appDir] : $this->autoloadConfig;
-			$cacheJournal = new Nette\Caching\Storages\FileJournal($this->tempDir);
-			$cacheStorage = new Nette\Caching\Storages\FileStorage($this->tempDir . '/cache', $cacheJournal);
-			$cache = new Nette\Caching\Cache($cacheStorage, 'configFiles');
-			$files = $cache->load('configFiles');
-			if($files === NULL) {
-				$files = [0 => []];
-				foreach(Nette\Utils\Finder::findFiles('*.neon')->from($scanDirs) as $path => $file) {
-					$content = Nette\Neon\Neon::decode(file_get_contents($path));
-					if(!array_key_exists('autoload', $content)) {
-						continue;
-					}
-					$autoload = Nette\Utils\Arrays::get($content, ['autoload', 0], FALSE);
-					if($autoload === FALSE) {
-						continue;
-					}
-					$autoload = is_int($autoload) ? $autoload : 0;
-					if(!isset($files[$autoload])) {
-						$files[$autoload] = [];
-					}
-					$files[$autoload][] = $path;
-				}
-				$cache->save('configFiles', $files);
-			}
-			foreach($files as $priorityFiles) {
-				foreach($priorityFiles as $config) {
-					$configurator->addConfig($config);
-				}
-			}
-		}
-		foreach($this->configs as $config) {
-			$configurator->addConfig($config);
-		}
-	}
-
-	/** Create and setup Nette\Configurator
-	 *
-	 * @return Nette\Configurator
-	 */
-	protected function setUpConfigurator() {
-		$configurator = new Nette\Configurator;
-
-		// Enable "autoload" section in config files
-		$configurator->defaultExtensions['autoload'] = 'Zax\DI\CompilerExtensions\EmptyExtension';
-
+	protected function createConfigurator() {
+		$configurator = new Configurator;
 		// Fix incorrectly initialized appDir
 		$configurator->addParameters(['appDir' => $this->appDir]);
 
@@ -253,21 +177,25 @@ class Bootstrap implements IBootstrap {
 		}
 		$loader->register();
 
-		$this->loadConfigFiles($configurator);
-
 		return $configurator;
+	}
+
+	protected function setupConfigurator(Configurator $configurator) {
+
 	}
 
 	/** Set up the environment and return DI container
 	 *
-	 * @return Nette\DI\Container
+	 * @return Container
 	 */
 	public function setUp() {
 		date_default_timezone_set($this->defaultTimezone);
 
-		$configurator = $this->setUpConfigurator();
+		$configurator = $this->createConfigurator();
 
-		/** @var Nette\DI\Container $container */
+		$this->setUpConfigurator($configurator);
+
+		/** @var Container $container */
 		$container = $configurator->createContainer();
 
 		return $container;
@@ -286,12 +214,9 @@ class Bootstrap implements IBootstrap {
 
 		if($this->errorPresenter !== NULL) {
 			$app->errorPresenter = $this->errorPresenter;
-		}/* else if($this->errorPresenters !== NULL) { // old hack, might need it again though
-			$app->errorPresenters = $this->errorPresenters;
-		}*/
+		}
 
 		$app->run();
 	}
-
 
 }

@@ -6,7 +6,10 @@ use Nette\DI\CompilerExtension;
 use Nette\Forms\Rules;
 use Nette\PhpGenerator\ClassType;
 
-
+/**
+ * This extension registers some additional form controls and also adds the ability to customize
+ * default error messages on custom validators.
+ */
 class FormsExtension extends CompilerExtension {
 
 	public function loadConfiguration() {
