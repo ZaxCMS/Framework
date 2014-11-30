@@ -16,15 +16,17 @@ class TemplateFactory extends Nette\Bridges\ApplicationLatte\TemplateFactory {
 								Nette\Security\User $user,
 								Nette\Caching\IStorage $cacheStorage,
 								Zax\Html\Icons\IIcons $icons,
-								Nette\Localization\ITranslator $translator) {
+								Nette\Localization\ITranslator $translator = NULL) {
 		parent::__construct($latteFactory, $httpRequest, $httpResponse, $user, $cacheStorage);
 		$this->icons = $icons;
 		$this->translator = $translator;
 	}
 
-	public function createTemplateHelpers(Nette\Localization\ITranslator $translator) {
+	public function createTemplateHelpers(Nette\Localization\ITranslator $translator = NULL) {
 		$helpers = new Zax\Latte\Helpers;
-		$helpers->setTranslator($translator);
+		if($translator !== NULL) {
+			$helpers->setTranslator($translator);
+		}
 		return $helpers;
 	}
 
