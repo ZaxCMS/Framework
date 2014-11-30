@@ -15,7 +15,7 @@ use Nette\Utils\Arrays;
  */
 class ZaxBootstrap extends AbstractBootstrap {
 
-	const CACHE_NAMESPACE;
+	const CACHE_NAMESPACE = 'configFiles';
 
 	protected $autoloadConfig = FALSE;
 
