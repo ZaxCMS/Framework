@@ -20,6 +20,7 @@
         "rixxi/gedmo": "1.0.1",
         "janmarek/webloader": "v2.3.0",
         "mkoubik/sloth": "master",
+        "dg/texy": "v2.6",
         "nextras/secured-links": "v1.2.0"
     },
     "require-dev": {
