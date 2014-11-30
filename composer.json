@@ -23,5 +23,8 @@
     },
     "require-dev": {
         "nette/tester": "v1.2.0"
+    },
+    "autoload": {
+        "classmap": ["src/"]
     }
 }
