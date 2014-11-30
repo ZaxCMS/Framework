@@ -252,8 +252,7 @@ class Bootstrap implements IBootstrap {
 
 		// Load app
 		$loader = $configurator->createRobotLoader()
-			->addDirectory($this->appDir)       // app dir
-			->addDirectory(__DIR__ . '/../');   // zax dir
+			->addDirectory($this->appDir);
 
 		// Load additional paths specified in index.php
 		foreach($this->loaderPaths as $path) {
