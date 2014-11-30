@@ -19,9 +19,22 @@ class ZaxBootstrap extends AbstractBootstrap {
 
 	protected $autoloadConfig = FALSE;
 
+	/**
+	 * @param bool|array $enable TRUE/FALSE or array of dirs to be scanned (TRUE = scan app dir)
+	 * @return $this
+	 */
 	public function enableConfigAutoload($enable = TRUE) {
-		$this->autoloadConfig = (bool) $enable;
+		$this->autoloadConfig = $enable;
 		return $this;
+	}
+
+	/**
+	 * @return Cache
+	 */
+	protected function createCache() {
+		$cacheJournal = new Storages\FileJournal($this->tempDir);
+		$cacheStorage = new Storages\FileStorage($this->tempDir . '/cache', $cacheJournal);
+		return new Cache($cacheStorage, self::CACHE_NAMESPACE);
 	}
 
 	/**
@@ -30,9 +43,7 @@ class ZaxBootstrap extends AbstractBootstrap {
 	protected function loadConfigFiles(Configurator $configurator) {
 		if($this->autoloadConfig === TRUE || is_array($this->autoloadConfig)) {
 			$scanDirs = $this->autoloadConfig === TRUE ? [$this->appDir] : $this->autoloadConfig;
-			$cacheJournal = new Storages\FileJournal($this->tempDir);
-			$cacheStorage = new Storages\FileStorage($this->tempDir . '/cache', $cacheJournal);
-			$cache = new Cache($cacheStorage, self::CACHE_NAMESPACE);
+			$cache = $this->createCache();
 			$files = $cache->load(self::CACHE_NAMESPACE);
 			if($files === NULL) {
 				$files = [0 => []];
