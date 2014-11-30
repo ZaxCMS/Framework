@@ -1,0 +1,37 @@
+<?php
+
+namespace ZaxCMS\Modules;
+
+use Nette\Application\BadRequestException;
+use Nette\DI\Container;
+use Nette\InvalidStateException;
+use Nette\Object;
+use ZaxCMS\DI\CMSConfig;
+
+class ModuleFactory extends Object {
+
+	protected $config;
+
+	protected $container;
+
+	public function __construct(CMSConfig $config, Container $container) {
+		$this->config = $config;
+		$this->container = $container; // Use DI container for lazy loading
+	}
+
+	public function create($module) {
+		if(!$this->config->isModuleEnabled($module)) {
+			throw new BadRequestException;
+		}
+
+		$factory = $this->container->getByType($this->config->getModuleFactoryClass($module));
+		$instance = $factory->create();
+
+		if(!$instance instanceof IModule) {
+			throw new InvalidStateException('Instance returned by factory doesn\'t implement \'ZaxCMS\Modules\IModule\'.');
+		}
+
+		return $instance;
+	}
+
+}
