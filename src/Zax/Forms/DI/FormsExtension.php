@@ -22,7 +22,7 @@ class FormsExtension extends CompilerExtension {
 		$init = $class->methods['initialize'];
 		$init->addBody(
 			'$this->getByType(\'Zax\Forms\FormExtension\')->register(?);',
-			array_key_exists('messages', $config) ? $config['messages'] : []
+			array_key_exists('messages', $config) ? [$config['messages']] : [[]]
 		);
 	}
 
