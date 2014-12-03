@@ -82,7 +82,7 @@ abstract class BaseControl extends Control implements Nette\Forms\IControl {
 		return $this->omitted;
 	}
 
-	protected function getTranslator() {
+	public function getTranslator() {
 		return $this->lookup('Nette\Application\UI\Control')->getTranslator();
 	}
 
