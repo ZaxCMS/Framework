@@ -3,6 +3,7 @@
 namespace Zax\Model\Doctrine;
 
 use Nette\Object;
+use Kdyby;
 
 class BaseModel extends Object {
 
@@ -14,6 +15,7 @@ class BaseModel extends Object {
 		$this->entityManagerAccessor = $entityManagerAccessor;
 	}
 
+	/** @return Kdyby\Doctrine\EntityManager */
 	protected function getEntityManager() {
 		if($this->entityManager === NULL) {
 			$this->entityManager = $this->entityManagerAccessor->getEntityManager();
