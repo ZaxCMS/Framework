@@ -24,7 +24,7 @@ trait TTranslatable {
 	 */
 	protected $translator;
 
-	public function injectTranslator(Kdyby\Translation\Translator $translator) {
+	public function injectTranslator(Kdyby\Translation\Translator $translator = NULL) {
 		$this->translator = $translator;
 	}
 
