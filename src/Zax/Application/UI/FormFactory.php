@@ -15,7 +15,7 @@ use Zax,
  */
 class FormFactory extends Nette\Object implements IFormFactory {
 
-	protected $defaultClass;
+	protected $defaultClass = 'Zax\Application\UI\Form';
 
 	/** @var Kdyby\Translation\Translator */
 	protected $translator;
@@ -23,31 +23,37 @@ class FormFactory extends Nette\Object implements IFormFactory {
 	/** @var Zax\Html\Icons\IIcons */
 	protected $icons;
 
-	public function __construct($defaultClass = NULL,
-								Kdyby\Translation\Translator $translator,
-								Zax\Html\Icons\IIcons $icons,
-								Zax\Forms\FormExtension $formExtension) {
-		$this->defaultClass = $defaultClass;
-		$this->translator = $translator;
+	public function __construct(Zax\Html\Icons\IIcons $icons, Nette\Localization\ITranslator $translator = NULL) {
 		$this->icons = $icons;
-		$formExtension->register();
+		$this->translator = $translator;
+	}
+
+	public function setDefaultClass($class) {
+		$this->defaultClass = $class;
+		return $this;
 	}
 
 	/**
 	 * Translated form factory
 	 *
-	 * @return Nette\Forms\Form
+	 * @return Zax\Application\UI\Form|Nette\Forms\Form
 	 * @throws Nette\InvalidArgumentException
 	 */
 	public function create() {
-		$f = $this->defaultClass === NULL ? new Form : new $this->defaultClass;
+		$f = new $this->defaultClass;
+
 		if(!$f instanceof Nette\Forms\Form) {
 			throw new Nette\InvalidArgumentException("Class '$class' is not a valid Nette form.");
 		}
-		$f->setTranslator($this->translator);
+
+		if($this->translator !== NULL) {
+			$f->setTranslator($this->translator);
+		}
+
 		if($f instanceof Zax\Application\UI\Form) {
 			$f->setIcons($this->icons);
 		}
+
 		return $f;
 	}
 
