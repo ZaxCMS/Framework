@@ -21,14 +21,14 @@ class ModuleFactory extends Object {
 
 	public function create($module) {
 		if(!$this->config->isModuleEnabled($module)) {
-			throw new BadRequestException;
+			throw new BadRequestException("Module '$module' not found. Did you register it in 'cms' section of your configuration file?");
 		}
 
 		$factory = $this->container->getByType($this->config->getModuleFactoryClass($module));
 		$instance = $factory->create();
 
 		if(!$instance instanceof IModule) {
-			throw new InvalidStateException('Instance returned by factory doesn\'t implement \'ZaxCMS\Modules\IModule\'.');
+			throw new InvalidStateException("Instance returned by factory doesn't implement 'ZaxCMS\\Modules\\IModule'.");
 		}
 
 		return $instance;
