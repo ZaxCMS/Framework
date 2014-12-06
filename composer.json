@@ -12,7 +12,7 @@
         "php": ">=5.4.0",
         "nette/nette": "2.2.6",
         "doctrine/orm": "v2.4.6",
-        "kdyby/events": "v2.2.0",
+        "fregis/events": "master",
         "kdyby/console": "v2.3.0",
         "kdyby/doctrine": "v2.1.0",
         "kdyby/translation": "v2.0.3",
@@ -20,6 +20,7 @@
         "gedmo/doctrine-extensions": "v2.3.9",
         "rixxi/gedmo": "1.0.1",
         "janmarek/webloader": "v2.3.0",
+        "joseki/webloader-filters": "~1.0",
         "mkoubik/sloth": "master",
         "dg/texy": "v2.6",
         "nextras/secured-links": "v1.2.0"
