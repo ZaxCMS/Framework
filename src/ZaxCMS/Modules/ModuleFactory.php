@@ -27,8 +27,8 @@ class ModuleFactory extends Object {
 		$factory = $this->container->getByType($this->config->getModuleFactoryClass($module));
 		$instance = $factory->create();
 
-		if(!$instance instanceof IModule) {
-			throw new InvalidStateException("Instance returned by factory doesn't implement 'ZaxCMS\\Modules\\IModule'.");
+		if(!$instance instanceof IModuleUI) {
+			throw new InvalidStateException("Component returned by factory doesn't implement 'ZaxCMS\\Modules\\IModuleUI'.");
 		}
 
 		return $instance;

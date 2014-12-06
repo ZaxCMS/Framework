@@ -3,6 +3,6 @@
 namespace ZaxCMS\Modules;
 use ZaxCMS;
 
-interface IModule {
+interface IModuleUI {
 
 }
