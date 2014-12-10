@@ -11,15 +11,16 @@ use Zax\DI\ConfigurableExtension;
  */
 class CMSExtension extends ConfigurableExtension {
 
+	const MODULE_NAME_TAG = 'zaxcms.module';
+
 	public function loadConfiguration() {
 		parent::loadConfiguration();
 
 		$config = $this->getConfig($this->getDefaultConfig());
-
 		$builder = $this->getContainerBuilder();
 
 		$builder->addDefinition($this->prefix('moduleFactory'))
-			->setClass('ZaxCMS\Modules\ModuleFactory');
+			->setClass($config['moduleFactory']);
 
 		if(!is_array($config['modules'])) {
 			return;
@@ -27,7 +28,19 @@ class CMSExtension extends ConfigurableExtension {
 		
 		foreach($config['modules'] as $name => $factory) {
 			$builder->addDefinition($this->prefix(md5('module' . $name . $factory)))
-				->setImplement($factory);
+				->setImplement($factory)
+				->addTag(self::MODULE_NAME_TAG, $name);
+		}
+	}
+
+	public function beforeCompile() {
+		$config = $this->getConfig($this->getDefaultConfig());
+		$builder = $this->getContainerBuilder();
+
+		$moduleManager = $builder->getDefinition($this->prefix('moduleFactory'));
+		foreach($builder->findByTag(self::MODULE_NAME_TAG) as $name => $moduleFactory) {
+			/** @var \Nette\DI\ServiceDefinition $moduleFactory */
+			$moduleManager->addSetup('addAvailableModule', [$name, $moduleFactory->getImplement()]);
 		}
 	}
 

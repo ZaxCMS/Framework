@@ -8,27 +8,47 @@ use Nette\InvalidStateException;
 use Nette\Object;
 use ZaxCMS\DI\CMSConfig;
 
-class ModuleFactory extends Object {
+interface IModuleUIFactory {
 
-	protected $config;
+	/**
+	 * @param string $name
+	 * @param string $factoryClass
+	 */
+	public function addAvailableModule($name, $factoryClass);
+
+	/**
+	 * @param string $module
+	 * @return IModuleUI
+	 */
+	public function create($module);
+
+}
+
+class ModuleUIFactory extends Object implements IModuleUIFactory {
 
 	protected $container;
 
-	public function __construct(CMSConfig $config, Container $container) {
-		$this->config = $config;
+	protected $availableModules = [];
+
+	public function __construct(Container $container) {
 		$this->container = $container; // Use DI container for lazy loading
 	}
 
+	public function addAvailableModule($name, $factoryClass) {
+		$this->availableModules[$name] = $factoryClass;
+		return $this;
+	}
+
 	public function create($module) {
-		if(!$this->config->isModuleEnabled($module)) {
+		if(!array_key_exists($module, $this->availableModules)) {
 			throw new BadRequestException("Module '$module' not found. Did you register it in 'cms' section of your configuration file?");
 		}
 
-		$factory = $this->container->getByType($this->config->getModuleFactoryClass($module));
+		$factory = $this->container->getByType($this->availableModules[$name]);
 		$instance = $factory->create();
 
 		if(!$instance instanceof IModuleUI) {
-			throw new InvalidStateException("Component returned by factory doesn't implement 'ZaxCMS\\Modules\\IModuleUI'.");
+			throw new InvalidStateException("Object returned by factory doesn't implement 'ZaxCMS\\Modules\\IModuleUI'.");
 		}
 
 		return $instance;
