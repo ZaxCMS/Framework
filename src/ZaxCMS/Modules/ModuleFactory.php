@@ -44,7 +44,7 @@ class ModuleUIFactory extends Object implements IModuleUIFactory {
 			throw new BadRequestException("Module '$module' not found. Did you register it in 'cms' section of your configuration file?");
 		}
 
-		$factory = $this->container->getByType($this->availableModules[$name]);
+		$factory = $this->container->getByType($this->availableModules[$module]);
 		$instance = $factory->create();
 
 		if(!$instance instanceof IModuleUI) {
