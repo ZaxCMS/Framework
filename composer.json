@@ -24,7 +24,7 @@
         "mkoubik/sloth": "master",
         "dg/texy": "v2.6",
         "nextras/secured-links": "v1.2.0",
-        "vojtech-dobes/nette-ajax-history": "1.0.0"
+        "vojtech-dobes/nette-ajax-history": "master"
     },
     "require-dev": {
         "nette/tester": "v1.2.0"
