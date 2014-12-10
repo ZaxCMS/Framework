@@ -38,9 +38,10 @@ class CMSExtension extends ConfigurableExtension {
 		$builder = $this->getContainerBuilder();
 
 		$moduleManager = $builder->getDefinition($this->prefix('moduleFactory'));
-		foreach($builder->findByTag(self::MODULE_NAME_TAG) as $name => $moduleFactory) {
+		foreach($builder->findByTag(self::MODULE_NAME_TAG) as $serviceName => $moduleName) {
+			$moduleFactory = $builder->getDefinition($serviceName);
 			/** @var \Nette\DI\ServiceDefinition $moduleFactory */
-			$moduleManager->addSetup('addAvailableModule', [$name, $moduleFactory->getImplement()]);
+			$moduleManager->addSetup('addAvailableModule', [$moduleName, $moduleFactory->getImplement()]);
 		}
 	}
 
