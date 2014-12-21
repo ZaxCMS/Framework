@@ -13,10 +13,7 @@ class AjaxMacro extends Nette\Object {
 	}
 
 	public function macroAjax(Latte\MacroNode $node, Latte\PhpWriter $writer) {
-		if($node->prefix === $node::PREFIX_TAG) {
-			return $writer->write($node->htmlNode->closing ? '' : 'if ($ajaxEnabled) {echo \' data-zax-ajax="true" \';}');
-		}
-		return '';
+		return $writer->write('echo Latte\Runtime\Filters::htmlAttributes(["data-zax-ajax" => TRUE])');
 	}
 
 }
