@@ -46,6 +46,7 @@ class TemplateFactory extends Nette\Bridges\ApplicationLatte\TemplateFactory {
 		if($control instanceof Zax\Application\UI\Control) {
 			$template->ajaxEnabled = $control->isAjaxEnabled();
 			$template->view = $control->view;
+			(new AjaxMacro)->install($template->getLatte());
 		}
 
 		$helpers = $this->createTemplateHelpers($translator);
