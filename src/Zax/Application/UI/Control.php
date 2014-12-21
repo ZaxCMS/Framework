@@ -65,17 +65,6 @@ abstract class Control extends Nette\Application\UI\Control {
 	}
 
 	/**
-	 * Sends flash messages to presenter.
-	 *
-	 * @param        $message
-	 * @param string $type
-	 * @return void
-	 */
-	public function flashMessage($message, $type='info') {
-		$this->presenter->flashMessage($message, $type);
-	}
-
-	/**
 	 * Enables AJAX for this component AND all sub-components
 	 *
 	 * @param bool $autoAjax Should call redrawControl() in attached()?
@@ -303,18 +292,6 @@ abstract class Control extends Nette\Application\UI\Control {
 			$class = $class->getParentClass();
 		} while ($class !== NULL);
 	}
-
-	/* TODO: some stuff for Texy ;-)
-	 public function netteLinksHandler($invocation, $phrase, $content, $modifier, $link) {
-		if (!$link) return $invocation->proceed();
-
-		if(strpos($link->URL, 'link:') === 0) {
-			$linkTmp = substr($link->URL, 5);
-			$link->URL = $this->getPresenter(TRUE)->link($linkTmp);
-		}
-
-		return $invocation->proceed();
-	}*/
 
 	/**
 	 * Texy factory
