@@ -9,7 +9,7 @@ class AjaxMacro extends Nette\Object {
 
 	public function install(Latte\Engine $latte) {
 		$set = new Latte\Macros\MacroSet($latte->getCompiler());
-		$set->addMacro('ajax', [$this, 'macroAjax']);
+		$set->addMacro('ajax', NULL, NULL [$this, 'macroAjax']);
 	}
 
 	public function macroAjax(Latte\MacroNode $node, Latte\PhpWriter $writer) {
