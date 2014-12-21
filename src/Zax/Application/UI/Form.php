@@ -18,7 +18,7 @@ use Nette,
  *
  * @package Zax\Application\UI
  */
-class Form extends Nette\Application\UI\Form {
+class Form extends Nette\Application\UI\Form implements IAjaxAware {
 
 	/** @var Zax\Forms\Rendering\DefaultFormRenderer */
 	private $renderer;

@@ -20,7 +20,7 @@ use Nette,
  *
  * @package Zax\Application\UI
  */
-abstract class Control extends Nette\Application\UI\Control {
+abstract class Control extends Nette\Application\UI\Control implements IAjaxAware {
 
 	use Zax\Traits\TTranslatable;
 
@@ -325,10 +325,8 @@ abstract class Control extends Nette\Application\UI\Control {
 	}
 
 	protected function prepareComponent($name, $control) {
-		if($control instanceof Control || $control instanceof Form) {
-			if($this->ajaxEnabled && !in_array($name, $this->ajaxDisabledFor) && ($control instanceof Control || $control instanceof Form)) {
-				$control->enableAjax();
-			}
+		if($this->ajaxEnabled && !in_array($name, $this->ajaxDisabledFor) && ($control instanceof IAjaxAware)) {
+			$control->enableAjax();
 		}
 	}
 
